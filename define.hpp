@@ -5,8 +5,8 @@
   #define API_EXPORT __declspec(dllexport)
   #define API_IMPORT __declspec(dllimport)
 #else
-  #define API_EXPORT __attribute__((visivility("default")))
-  #define API_IMPORT __attribute__((visivility("default")))
+  #define API_EXPORT __attribute__((visibility("default")))
+  #define API_IMPORT __attribute__((visibility("default")))
 #endif
 
 #define KRATOS_DEFINE_VARIABLE(type, name)      API extern type name;
