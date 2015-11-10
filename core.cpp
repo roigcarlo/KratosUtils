@@ -12,7 +12,7 @@ namespace Kratos {
   void test_core() {
     std::cout << "CORE: I can execute myself" << std::endl;
     std::cout << "CORE: I can access own variables:\t" << CORE_INT << std::endl;
-    std::cout << "CORE: I can aceess own functions:\t" << core_function() << std::endl;
+    std::cout << "CORE: I can access own functions:\t" << core_function() << std::endl;
   }
 
 }
