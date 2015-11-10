@@ -13,6 +13,10 @@ add_library(Core SHARED ${CORE_SOURCES})
 add_library(App1 SHARED ${APP1_SOURCES})
 add_library(App2 SHARED ${APP2_SOURCES})
 
+set_target_properties(Core PROPERTIES COMPILE_DEFINITIONS "EXPORT_CORE=1")
+set_target_properties(App1 PROPERTIES COMPILE_DEFINITIONS "EXPORT_APP1=1")
+set_target_properties(App2 PROPERTIES COMPILE_DEFINITIONS "EXPORT_APP2=1")
+
 target_link_libraries(App1 Core)
 target_link_libraries(App2 App1 Core)
 

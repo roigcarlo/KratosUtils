@@ -1,10 +1,16 @@
 #include <iostream>
 #include "define.hpp"
 
+#ifdef EXPORT_APP1
+  #define API __declspec(dllexport)
+#else
+  #define API __declspec(dllimport)
+#endif
+
 namespace Kratos {
 
   KRATOS_DEFINE_VARIABLE(int, APP1_INT)
 
-  int app1_function();
-  void test_app1();
+  API int app1_function();
+  API void test_app1();
 }
