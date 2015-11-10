@@ -2,11 +2,11 @@
 #include "define.hpp"
 
 #ifdef EXPORT_CORE
-  #pragma message("Exporting symbols for Core")
-  #define API __declspec(dllexport)
+#undef  API
+#define API API_EXPORT
 #else
-  #pragma message("NOT Exporting symbols for Core")
-  #define API __declspec(dllimport)
+#undef  API
+#define API API_IMPORT
 #endif
 
 namespace Kratos {

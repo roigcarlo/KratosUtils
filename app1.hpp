@@ -2,9 +2,11 @@
 #include "define.hpp"
 
 #ifdef EXPORT_APP1
-  #define API __declspec(dllexport)
+#undef  API
+#define API API_EXPORT
 #else
-  #define API __declspec(dllimport)
+#undef  API
+#define API API_IMPORT
 #endif
 
 namespace Kratos {
