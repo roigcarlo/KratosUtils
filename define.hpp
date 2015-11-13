@@ -9,9 +9,16 @@
   #define API_IMPORT __attribute__((visibility("default")))
 #endif
 
-#define KRATOS_DEFINE_VARIABLE(type, name)      API extern type name;
+// This fixes MSVC not expanding __VA_ARGS__ as defined in the C99 standard
+#define EXPAND(A) A
 
-#define KRATOS_CREATE_VARIABLE(type, name, val) API type name = val;
+// Random macro magic
+#define API_CALL(x,T1,T2,T3,...) T3
+#define API(...) EXPAND(API_CALL(,##__VA_ARGS__,API_EXPORT,API_IMPORT))
+
+#define KRATOS_DEFINE_VARIABLE(api, type, name)      api extern type name;
+
+#define KRATOS_CREATE_VARIABLE(api, type, name, val) api type name = val;
 #define KRATOS_REGISTER_VARIABLE(var) // NOT USED HERE
 
 #endif

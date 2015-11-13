@@ -1,9 +1,8 @@
-// This file is the main application that uses DLL
 #include "core.hpp"
 
 namespace Kratos {
 
-  KRATOS_CREATE_VARIABLE(int, CORE_INT, 0)
+  KRATOS_CREATE_VARIABLE(API(CORE), int, CORE_INT, 0)
 
   int core_function() {
     return CORE_INT;

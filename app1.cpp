@@ -3,7 +3,7 @@
 
 namespace Kratos {
 
-  KRATOS_CREATE_VARIABLE(int, APP1_INT, 1)
+  KRATOS_CREATE_VARIABLE(API(APP1), int, APP1_INT, 1)
 
   int app1_function() {
     return APP1_INT;

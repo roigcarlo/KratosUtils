@@ -1,18 +1,10 @@
 #include <iostream>
 #include "define.hpp"
 
-#ifdef EXPORT_APP2
-#undef  API
-#define API API_EXPORT
-#else
-#undef  API
-#define API API_IMPORT
-#endif
-
 namespace Kratos {
 
-  KRATOS_DEFINE_VARIABLE(int, APP2_INT)
+  KRATOS_DEFINE_VARIABLE(API(APP2), int, APP2_INT)
 
-  API int app2_function();
-  API void test_app2();
+  API(APP2) int app2_function();
+  API(APP2) void test_app2();
 }
