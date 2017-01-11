@@ -93,7 +93,7 @@ sendEmail -s ${KRATOS_MAIL_SERVER} -xu ${KRATOS_MAIL_USER} -xp ${KRATOS_MAIL_PAS
 # We will leave it empty 'cose this is a virtual machine and will die, and we don't care about its future, f**k you VM :)
 
 # Give the email some time to be queued and delivered
-sleep 150 # 2.5 minutes
+sleep 300 # 5 minutes
 
 # This will stop the EBS boot instance, stopping the hourly charges.
 # Have Auto Scaling terminate it, stopping the storage charges.
