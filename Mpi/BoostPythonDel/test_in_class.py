@@ -15,5 +15,5 @@ class TestClass(object):
   def doWork(self):
     self.proxy.ImportantFunction()
 
-with mpiProxy.MpiProxy() as proxy:
-  proxy.ImportantFunction()
+testClass = TestClass()
+testClass.doWork()
