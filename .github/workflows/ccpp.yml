@@ -16,16 +16,16 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: docker://cdssnc/touched-github-action
-    - with:
-        args: "{MiniKratos/Red/**}"
     - name: test-red
+      uses: docker://cdssnc/touched-github-action
+      with:
+        args: "{MiniKratos/Red/**}"
 
     steps:
-    - uses: docker://cdssnc/touched-github-action
-    - with: 
-        args: "{MiniKratos/Blue/**}"
     - name: test-blue
+      uses: docker://cdssnc/touched-github-action
+      with: 
+        args: "{MiniKratos/Blue/**}"
 
   finish:
     runs-on: self-hosted
