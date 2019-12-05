@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+project(MiniKratos)
+
 ## Set the soruces:
 set( CORE_SOURCES core.cpp )
 set( APP1_SOURCES app1.cpp )
