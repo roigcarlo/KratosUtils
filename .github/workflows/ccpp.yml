@@ -12,24 +12,24 @@ jobs:
     - name: configure
       run: ./MiniKratos/configure.sh
 
-	test:
-		runs-on: self-hosted
+  test:
+    runs-on: self-hosted
 
-		if:
-			paths: 
-			- MiniKratos/*
+    if:
+      paths: 
+      - MiniKratos/*
 
-		steps:
-		- name: test
-			run:	./MiniKratos/build/test_all
+    steps:
+    - name: test
+      run:	./MiniKratos/build/test_all
 
-	nothing:
-		runs-on: self-hosted
+  nothing:
+    runs-on: self-hosted
 		
-		if:
-			paths:
-			- !MiniKratos/*
+    if:
+      paths:
+      - !MiniKratos/*
 
-		steps:
-		- name: report
-			run: echo "Nothing to report"
+    steps:
+    - name: report
+      run: echo "Nothing to report"
