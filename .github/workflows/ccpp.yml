@@ -35,10 +35,6 @@ jobs:
   finish:
     runs-on: self-hosted
 
-    if:
-      paths:
-      - !MiniKratos/*
-
     steps:
     - name: report
       run: echo "Nothing to report"
