@@ -20,12 +20,13 @@ jobs:
       uses: docker://cdssnc/touched-github-action
       with:
         args: "{MiniKratos/Red/**}"
+      run: echo "Red"
 
-    steps:
     - name: test-blue
       uses: docker://cdssnc/touched-github-action
       with: 
         args: "{MiniKratos/Blue/**}"
+      run: echo "Blue"
 
   finish:
     runs-on: self-hosted
