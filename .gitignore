@@ -28,4 +28,4 @@
 *.app
 
 # Folders
-cmake_build
+MainKratos/build
