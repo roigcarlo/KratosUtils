@@ -12,20 +12,24 @@ jobs:
     - name: configure
       run: ./MiniKratos/configure.sh
 
-  test:
+  test-red:
     runs-on: self-hosted
 
     steps:
-    - name: test-red
+    - name: check-red
       uses: docker://cdssnc/touched-github-action
       with:
         args: "{MiniKratos/Red/**}"
+    - name: test-red
+      if: success()
       run: echo "Red"
 
-    - name: test-blue
+    - name: check-blue
       uses: docker://cdssnc/touched-github-action
       with: 
         args: "{MiniKratos/Blue/**}"
+    - name: test-blue
+      if: success()
       run: echo "Blue"
 
   finish:
