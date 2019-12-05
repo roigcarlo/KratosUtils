@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: CoreBuild
 
 on: [push]
 
@@ -15,15 +15,19 @@ jobs:
   test:
     runs-on: self-hosted
 
-    if:
-      paths: 
-      - MiniKratos/*
+    steps:
+    - uses: docker://cdssnc/touched-github-action
+    - with:
+        args: "{MiniKratos/Red/**}"
+    - name: test-red
 
     steps:
-    - name: test
-      run:	./MiniKratos/build/test_all
+    - uses: docker://cdssnc/touched-github-action
+    - with: 
+        args: "{MiniKratos/Blue/**}"
+    - name: test-blue
 
-  nothing:
+  finish:
     runs-on: self-hosted
 
     if:
