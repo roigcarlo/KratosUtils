@@ -10,12 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: configure
-      run: ./MiniKratos/configure.sh
+      run:  ./MiniKratos/configure.sh
     - name: Upload compilation artifacts
       uses: actions/upload-artifact@v1
       with:
         name: Build
-        path: MiniKratos/build
+        path: build
 
   test:
     needs: build
@@ -27,7 +27,7 @@ jobs:
       with:
         name: Build
     - name: test-red
-      run: ./MiniKratos/build/test_all
+      run:  ./build/test_all
 
   finish:
     needs:  [build, test]
