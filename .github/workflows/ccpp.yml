@@ -11,12 +11,21 @@ jobs:
     - uses: actions/checkout@v1
     - name: configure
       run: ./MiniKratos/configure.sh
+    - name: Upload compilation artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: Build
+        path: MiniKratos/build
 
   test:
     needs: build
     runs-on: self-hosted
 
     steps:
+    - name: Download compilation artifacts
+      uses: actions/download-artifact@v1
+      with:
+        name: Build
     - name: test-red
       run: ./MiniKratos/build/test_all
 
