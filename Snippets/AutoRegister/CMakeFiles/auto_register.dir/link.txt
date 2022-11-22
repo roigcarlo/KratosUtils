@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/auto_register.dir/register.cpp.o -o auto_register 

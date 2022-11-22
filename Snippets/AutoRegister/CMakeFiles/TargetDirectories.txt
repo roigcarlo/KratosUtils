@@ -1,0 +1,3 @@
+/home/roigcarlo/KratosUtils/Snippets/AutoRegister/CMakeFiles/auto_register.dir
+/home/roigcarlo/KratosUtils/Snippets/AutoRegister/CMakeFiles/edit_cache.dir
+/home/roigcarlo/KratosUtils/Snippets/AutoRegister/CMakeFiles/rebuild_cache.dir
