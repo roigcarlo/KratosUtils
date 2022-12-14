@@ -102,7 +102,6 @@ public:
 
     virtual ~RegistryValueItem()
     {
-
         // I think there is no longer need to delete anything
         // value will get deleted once mpValue gets no refereces (registry destruction)
     }
@@ -149,11 +148,11 @@ public:
 
 RegistryItem* Registry::mspRootRegistryItem = nullptr;
 
-#define CLASS_REGISTER_DEFINITION(NAME, ...)                                                \
-    static inline RegistryItem msRegistryItem = Registry::AddItem<RegistryValueItem<NAME>, NAME>( \
-        #NAME, [](){                                                                        \
-            return std::make_shared<NAME>(__VA_ARGS__);                                     \
-        }                                                                                   \
+#define CLASS_REGISTER_DEFINITION(NAME, ...)                                                        \
+    static inline RegistryItem msRegistryItem = Registry::AddItem<RegistryValueItem<NAME>, NAME>(   \
+        #NAME, [](){                                                                                \
+            return std::make_shared<NAME>(__VA_ARGS__);                                             \
+        }                                                                                           \
     );
 
 class SampleProcess {
@@ -179,9 +178,11 @@ std::ostream& operator<< (std::ostream &out, SampleProcess &sp) {
 
 int main() {
     
-    auto& value = Registry::GetItem("SampleProcess").GetValue<SampleProcess>();
+    auto& value1 = Registry::GetItem("SampleProcess").GetValue<SampleProcess>();
+    auto& value2 = Registry::GetItem("SampleProcess").GetValue<SampleProcess>();
 
-    std::cout << "Hey, I've got a " << value.Info() << std::endl;
+    std::cout << "Hey, I've got a " << value1.Info() << " @: " << &value1 << std::endl;
+    std::cout << "Hey, I've got a " << value2.Info() << " @: " << &value2 << std::endl;
 
     return 0;
 }
