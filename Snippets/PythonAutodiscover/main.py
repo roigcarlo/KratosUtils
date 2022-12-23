@@ -9,7 +9,7 @@ def isfrommod(mod, mod_name):
 def isstage(mod, mod_name):
     return inspect.isclass(mod) and isfrommod(mod, mod_name) and issubclass(mod, base.BaseStage) == True
 
-def discover_stages(to_load):
+def discoverstages(to_load):
     protos = []
 
     for mod_name in to_load:
@@ -37,5 +37,5 @@ if __name__ == "__main__":
         "user_5"
     ]
 
-    for cls_proto in discover_stages(to_load):
+    for cls_proto in discoverstages(to_load):
         instance = cls_proto()
