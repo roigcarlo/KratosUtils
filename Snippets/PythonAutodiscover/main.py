@@ -1,23 +1,27 @@
-import sys
 import inspect
 import importlib
+
+import base
+
+def isfrommod(mod, mod_name):
+    return mod.__module__ == mod_name
+
+def isstage(mod, mod_name):
+    return inspect.isclass(mod) and isfrommod(mod, mod_name) and issubclass(mod, base.BaseStage) == True
 
 def discover_stages(to_load):
     protos = []
 
-    for custom_mod_name in to_load:
-        custom_mod = importlib.import_module(custom_mod_name)
+    for mod_name in to_load:
+        mod = importlib.import_module(mod_name)
 
-        excl_defined    = [m[0] for m in inspect.getmembers(custom_mod, inspect.isclass) if m[1].__module__ == custom_mod_name]
-        
-        # excl_defined could be avoided if I could query mod_cls.__module__ == custom_mod_name. But it does not let me do that :S.
-        possible_stages = [{"name": name, "cls_proto": mod_cls} for name, mod_cls in custom_mod.__dict__.items() if name in excl_defined and hasattr(mod_cls, "stage") and getattr(mod_cls, "stage") == True]
+        possible_stages = [{"name": name, "cls_proto": mod_cls} for name, mod_cls in mod.__dict__.items() if isstage(mod_cls, mod_name)]
 
         match len(possible_stages):
             case 0:
-                print(f"No stages present in module {custom_mod_name}")
+                print(f"No stages present in module {mod_name}")
             case 1:
-                print(f"Dicovered {custom_mod_name}.{possible_stages[0]['name']}")
+                print(f"Dicovered {mod_name}.{possible_stages[0]['name']}")
                 yield possible_stages[0]['cls_proto']
             case _:
                 print(f"Too many classes {[p['name'] for p in possible_stages]} have the 'stage' attribute")
