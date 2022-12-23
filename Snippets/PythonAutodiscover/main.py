@@ -7,7 +7,7 @@ def isfrommod(mod, mod_name):
     return mod.__module__ == mod_name
 
 def isstage(mod, mod_name):
-    return inspect.isclass(mod) and isfrommod(mod, mod_name) and issubclass(mod, base.BaseStage) == True
+    return inspect.isclass(mod) and isfrommod(mod, mod_name) and issubclass(mod, base.BaseStage)
 
 def discoverstages(to_load):
     protos = []
@@ -19,7 +19,10 @@ def discoverstages(to_load):
 
         match len(possible_stages):
             case 0:
-                print(f"No stages present in module {mod_name}")
+                print(f"No stages present in module {mod_name}.")
+                if len(candidates := [name for name, mod_cls in mod.__dict__.items() if inspect.isclass(mod_cls) and isfrommod(mod_cls, mod_name)]):
+                    print(f"\tThese classes were found: {candidates}")
+                    print(f"\tMake sure exactly one derives from 'BaseStage'")
             case 1:
                 print(f"Dicovered {mod_name}.{possible_stages[0]['name']}")
                 yield possible_stages[0]['cls_proto']
