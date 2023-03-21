@@ -2,6 +2,7 @@
 #include <functional>
 #include <unordered_map>
 
+// Hash function to be able to simulate Kratos "Tables"
 struct pair_hash
 {
     template <class T1, class T2>
@@ -10,6 +11,7 @@ struct pair_hash
     }
 };
 
+// This should look like a simplified Kratos `Properties` class
 class Properties {
 
     // Types
@@ -23,18 +25,14 @@ class Properties {
         Properties() {}
         ~Properties() {}
 
+        // This trick will work as long as the arguments of the lambdas stored in mAccessor are fixed and allows:
+        // - To call `Get` with 1 argument when no accessor for that `name`
+        // - To call `Get` with 1 argument when the lambda does not use the extra strings (but are there because you need to have a unique type)
+        // - To call `Get` with N arguments.
+        // TL;DR: It works as std::placeholder, but you can leave them empty.
         template<typename ...TArgs>
-        double Get(std::string name, TArgs... args) {
-            auto value = mAccessors.find(name);
-            if (value != mAccessors.end()) {
-                return value->second(name, this, args...);
-            } else {
-                return mProperties[name];
-            }
-        }
-
-        double Get(std::string name) {
-            return mProperties[name];
+        double Get(const std::string & name, TArgs... args) {
+            return this->_Get(name, args..., "", "");
         }
 
         const std::unordered_map<KeyType, double> & GetProperties() const {
@@ -46,6 +44,17 @@ class Properties {
         }
 
     private:
+        template<typename ...TArgs>
+        double _Get(const std::string & name, const std::string & idx1, const std::string & idx2, TArgs... args) {
+            auto value = mAccessors.find(name);
+            if (value != mAccessors.end()) {
+                return value->second(name, this, idx1, idx2);
+            } else {
+                return mProperties[name];
+            }
+        }
+
+        // Note: `mProperties` simulates the Kratos DB, but could be whatever. `mAccessors` is inteded like it is).
         std::unordered_map<KeyType, AccessorType> mAccessors  = {};
         std::unordered_map<KeyType, double>       mProperties = {
             {"alpha", 1.0},
@@ -161,30 +170,20 @@ int main() {
     std::cout << "table_accessor: " << my_properties.Get("alpha", "gamma", "gamma") << std::endl;   // 90.0
 
     // Accessing a variable means getting a value from table (x, [variable]) = z 
-    std::cout << "Beta : " << my_properties.Get("beta", "", "") << std::endl;                       //  40.0
+    std::cout << "Beta : " << my_properties.Get("beta") << std::endl;                               //  40.0
 
     vartb_accessor.Update("beta");
-    std::cout << "Beta : " << my_properties.Get("beta", "", "") << std::endl;                       //  50.0
+    std::cout << "Beta : " << my_properties.Get("beta") << std::endl;                               //  50.0
 
     vartb_accessor.Update("gamma");
-    std::cout << "Beta : " << my_properties.Get("beta", "", "") << std::endl;                       //  60.0
+    std::cout << "Beta : " << my_properties.Get("beta") << std::endl;                               //  60.0
 
     // Accessing a variable means executing an operation
-    std::cout << "Gamma: " << my_properties.Get("gamma", "", "") << std::endl;                      //   3.1
+    std::cout << "Gamma: " << my_properties.Get("gamma") << std::endl;                              //   3.1
 
     // Acess without accesor (normal)
-    std::cout << "Delta: " << my_properties.Get("delta", "", "") << std::endl;                      //   4.0
+    std::cout << "Delta: " << my_properties.Get("delta") << std::endl;                              //   4.0
 
     // Acess without accesor (normal, no overhead)
     std::cout << "Delta: " << my_properties.Get("delta") << std::endl;                              //   4.0
-
-
-    // en la CL
-    // prop.GetAccesor().Get(TEMPERATURE,geom,N)
-    // main.py
-
-    // a = TableAccessor(TEMPERATURE,DENSITY)
-
-    // prop.SetAccessor(a)
-    // prop.SetAccessor(Ricccessor(TEMPERATURE,DENSITY))
 }
