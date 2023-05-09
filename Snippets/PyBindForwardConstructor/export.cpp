@@ -45,7 +45,7 @@ class AccessorDerived : public AccessorBase {
 
 class Properties {
     public:
-        using TCreator = std::function<std::unique_ptr<AccessorDerived>()>;
+        using TCreator = std::function<std::unique_ptr<AccessorBase>()>;
 
         AccessorBase * SetAccesor(const TCreator && accessorCreator) {
             mpAccessor = accessorCreator();
@@ -60,6 +60,7 @@ class Properties {
         std::unique_ptr<AccessorBase> mpAccessor;
 };
 
+PYBIND11_MAKE_OPAQUE(std::unique_ptr<AccessorBase>);
 PYBIND11_MAKE_OPAQUE(std::unique_ptr<AccessorDerived>);
 
 PYBIND11_MODULE(ExportAccessor, m) {
@@ -68,12 +69,12 @@ PYBIND11_MODULE(ExportAccessor, m) {
         .def("GetProps", &AccessorBase::GetProps)
         ;
 
-    py::class_<std::unique_ptr<AccessorDerived>>(m, "Unique_ptr_AccessorDerived_binding");
+    py::class_<std::unique_ptr<AccessorBase>>(m, "Unique_ptr_AccessorBase_binding");
 
     py::class_<AccessorDerived, AccessorBase>(m, "AccessorDerived")
         .def("Creator", [](std::string name, int a, int b) {
-            Properties::TCreator creator = [name, a, b]() -> std::unique_ptr<AccessorDerived> {
-                return std::move(std::unique_ptr<AccessorDerived>(new AccessorDerived(name, a, b)));
+            Properties::TCreator creator = [name, a, b]() -> std::unique_ptr<AccessorBase> {
+                return std::move(std::unique_ptr<AccessorBase>(new AccessorDerived(name, a, b)));
             };
 
             return creator;
