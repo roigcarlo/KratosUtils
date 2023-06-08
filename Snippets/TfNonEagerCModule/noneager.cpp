@@ -1,11 +1,16 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
 class Foo {
     public:
-        static double add(double a) {
-            return a + 1.0;
+        static std::vector<double> add(std::vector<double> a) {
+            for(std::size_t i = 0; i < a.size(); i++) {
+                a[i] /= 2.0;
+            }
+
+            return a;
         }
 };
 
