@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     MPI_Comm_connect(port_name, MPI_INFO_NULL, 0, MPI_COMM_WORLD, &intercomm);
 
     // Test Communication
-    int send_data[] = {64, 128};
+    int send_data[] = {90, 91};
     int recv_data[] = {0, 0};
 
     MPI_Sendrecv(&send_data, 2, MPI_INT, 0, 0, &recv_data, 2, MPI_INT, 0, 0, intercomm, MPI_STATUS_IGNORE);
