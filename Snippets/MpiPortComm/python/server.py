@@ -1,4 +1,6 @@
-from mpi4py import MPI
+import numpy as np
+
+from mpi4py import MPI 
 
 comm = MPI.COMM_WORLD
 
@@ -18,11 +20,16 @@ rize = intercomm.remote_size
 
 print(f"Server initialized ({rank},{size},{rize})")
 
-send_data = [None for _ in range(size)]; 
-send_data[rize] = 1337
+send_data = np.array([1337, 2661], dtype=np.int32); 
+recv_data = np.array([0,    0   ], dtype=np.int32); 
 
-recv_data = intercomm.sendrecv(sendobj=[send_data], dest=0, sendtag=0, source=0, recvtag=0)
+# Test Communication
+intercomm.Sendrecv(
+    sendbuf=[send_data, 2, 0, MPI.INT], dest=0, sendtag=0, 
+    recvbuf=[recv_data, 2, 0, MPI.INT], source=0, recvtag=0
+)
 
 print(f"Client has data:", recv_data)
 
+MPI.Close_port(port_name)
 MPI.Finalize()
