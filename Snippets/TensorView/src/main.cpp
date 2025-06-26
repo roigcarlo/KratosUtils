@@ -14,7 +14,10 @@ int main() {
     std::vector<Data::Array1D<double, 3>> myData(1000);
 
     // This is how we interact with the data container
-    auto ctnr_view = myData | std::views::transform([](Data::Array1D<double, 3>& item) -> double& {return item[0];});
+    auto ctnr_view = myData | std::views::transform([](Data::Array1D<double, 3>& item) -> double& {
+        // In kratos here we could put node->GetSolutionStepValue(VELOCITY_X); for example
+        return item[0];
+    });
 
     // This is the minimalistic TensorView implementation that we use to collect and store data
     TensorView<int, decltype(ctnr_view)> tensorView{ctnr_view};
