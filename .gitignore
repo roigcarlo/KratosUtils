@@ -27,5 +27,17 @@
 *.out
 *.app
 
+# Bin & build
+**/bin
+**/build
+**/CMakeFiles
+*.cmake
+**/CMakeCache.txt
+**/Makefile
+
+# Project
+**/__pycache__
+**/.vscode
+
 # Folders
 MiniKratos/build
