@@ -7,12 +7,12 @@
 #include <range/v3/algorithm/for_each.hpp>
 
 template<class TData>
-class TensorView {
+class DataView {
     public:
         using ViewType = ranges::any_view<TData&, ranges::category::input>;
 
-        TensorView(ViewType view) : 
-            mSrcView(view)
+        DataView(ViewType view) 
+            : mSrcView(view)
         {
             mData.resize(ranges::distance(view));
         }
@@ -37,6 +37,40 @@ class TensorView {
 
     private:
         std::vector<TData> mData;
-
         ViewType mSrcView;
+};
+
+template<class TContainer, class TData>
+class ContainerView : public std::enable_shared_from_this<ContainerView<TContainer, TData>> {
+    public:
+        using SelfType = ContainerView<TContainer, TData>;
+
+        ContainerView(TContainer& container) 
+            : mContainer(container)
+            , mDataView(nullptr)
+            {}
+
+        template<class TNewData>
+        std::shared_ptr<ContainerView<TContainer, TNewData>> FromThisView() const {
+            return std::make_shared<ContainerView<TContainer, TNewData>>(mContainer);
+        }
+
+        template<class TIndexType, class TFunctor>
+        std::shared_ptr<SelfType> CreateDataView(TIndexType index, TFunctor&& functor) {
+            auto view = mContainer | ranges::views::transform(
+                [index, functor](auto& item) -> TData& {
+                    return functor(item, index);
+                });
+
+            mDataView = std::make_shared<DataView<TData>>(view);
+            return this->shared_from_this();
+        }
+
+        std::shared_ptr<DataView<TData>> GetDataView() {
+            return mDataView;
+        }
+
+    private:
+        TContainer& mContainer;
+        std::shared_ptr<DataView<TData>> mDataView;
 };

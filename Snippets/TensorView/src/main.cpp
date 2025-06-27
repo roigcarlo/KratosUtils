@@ -9,34 +9,71 @@
 // Views
 #include "tensor_view.hpp"
 
-int main() {
+using CntrDataType = Data::Array1D<double, 3>;
+using CntrType     = std::vector<CntrDataType>;
+using DataViewType = double;
+using IndexType    = std::size_t;
 
-    // This emulates data inside a container
-    std::vector<Data::Array1D<double, 3>> myData(1000);
-
-    // This is how we interact with the data container
-    auto ctnr_view = myData | ranges::views::transform([](Data::Array1D<double, 3>& item) -> double& {
-        // In kratos here we could put node->GetSolutionStepValue(VELOCITY_X); for example
-        return item[0];
-    });
-
-    // This is the minimalistic TensorView implementation that we use to collect and store data
-    TensorView<double> tensorView{ctnr_view};
-
-    // Collect data
-    tensorView.CollectData();
+void operation_a(std::shared_ptr<DataView<DataViewType>> pDataView) {
+  // Collect data
+    pDataView->CollectData();
 
     // Modify the data (and this is exposed to python as well so you can do whatever you want)
-    for (auto& item : tensorView.GetData()) {
-        item += 1;
+    for (auto& item : pDataView->GetData()) {
+        item += 1.0;
     }
 
     // Store data back to the original container
-    tensorView.StoreData();
+    pDataView->StoreData();
+}
+
+void operation_b(std::shared_ptr<DataView<DataViewType>> pDataView) {
+    // Collect data
+    pDataView->CollectData();
+
+    // Modify the data (and this is exposed to python as well so you can do whatever you want)
+    for (auto& item : pDataView->GetData()) {
+        item += 2.0;
+    }
+
+    // Store data back to the original container
+    pDataView->StoreData();
+}
+
+template<class TContainerView>
+void context_emulator(TContainerView& cntr_view) {
+    // Create a new containe view and assign a data accessor:
+    // 0:               is the index accessor (e.g. 0 for the first item in the Array3D, VELOCITY for a node, etc... )
+    // lambda function: is used to access the data inside the container as the user wishes.
+    auto cntr_view_x = cntr_view->template FromThisView<DataViewType>()->CreateDataView(0, [](CntrDataType& item, IndexType index) -> DataViewType& {
+        return item[index];
+    });
+
+    // Create a new containe view and assign a data accessor:
+    // 0:               is the index accessor (e.g. 0 for the first item in the Array3D, VELOCITY for a node, etc... )
+    // lambda function: is used to access the data inside the container as the user wishes.
+    auto cntr_view_y = cntr_view->template FromThisView<DataViewType>()->CreateDataView(1, [](CntrDataType& item, IndexType index) -> DataViewType& {
+        return item[index];
+    });
+
+    operation_a(cntr_view_x->GetDataView());
+    operation_b(cntr_view_y->GetDataView());
+}
+
+int main() {
+
+    // This emulates data inside a container
+    CntrType myData(1000);
+
+    // Create a container view over the container. This is a dummy/root container, but it could be used directly.
+    auto cntr_view = std::make_shared<ContainerView<CntrType, DataViewType>>(myData);
+
+    // Emulate some usage
+    context_emulator(cntr_view);
 
     // Print the first 10 items to verify
     for (auto& item: myData | ranges::views::take(10)) {
-        std::cout << item[0] << " ";
+        std::cout <<"(" << item[0] << "," << item[1] << ")" << std::endl;
     }   
 
     return 0;
