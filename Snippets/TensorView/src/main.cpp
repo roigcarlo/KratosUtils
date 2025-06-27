@@ -50,7 +50,7 @@ void context_emulator(TContainerView& cntr_view) {
     });
 
     // Create a new containe view and assign a data accessor:
-    // 0:               is the index accessor (e.g. 0 for the first item in the Array3D, VELOCITY for a node, etc... )
+    // 1:               is the index accessor (e.g. 0 for the first item in the Array3D, VELOCITY for a node, etc... )
     // lambda function: is used to access the data inside the container as the user wishes.
     auto cntr_view_y = cntr_view->template FromThisView<DataViewType>()->CreateDataView(1, [](CntrDataType& item, IndexType index) -> DataViewType& {
         return item[index];
